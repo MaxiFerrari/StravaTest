@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Table, Tag, Space, Divider } from "antd";
+import { Table, Tag, Divider } from "antd";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import moment from "moment";
 import _ from "lodash";
 
 const MonthlyStats = (props) => {

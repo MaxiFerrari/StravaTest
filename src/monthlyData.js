@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { useSelector } from "react-redux";
 
-const MonthlyStats = (props) => {
+const MonthlyStats = () => {
   const monthlyData = useSelector((state) => state.monthlyData);
   const [monthlyStats, setMonthlyStats] = useState([]);
 

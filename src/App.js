@@ -12,8 +12,37 @@ function App() {
   const dispatch = useDispatch();
   const athleteData = useSelector((state) => state.athleteData);
   const userInfo = useSelector((state) => state.userInfo);
-  const token = process.env.REACT_APP_AUTHORIZATION_TOKEN;
+  const accessToken = localStorage.getItem("access_token");
+  const refreshToken = localStorage.getItem("refresh_token");
+
+  const code = process.env.REACT_APP_CODE;
+  const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
+  const idClient = process.env.REACT_APP_ID_CLIENT;
+  const appAccessToken = process.env.REACT_APP_ACCESS_TOKEN;
+
   useEffect(() => {
+    if (accessToken === "undefined") {
+      fetch(
+        `https://www.strava.com/oauth/token?client_id=${idClient}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${appAccessToken}`,
+          },
+        },
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          localStorage.setItem("access_token", data.access_token);
+          localStorage.setItem("refresh_token", data.refresh_token);
+          getData(data.access_token);
+        });
+    } else {
+      getData(accessToken);
+    }
+  }, []);
+
+  const getData = (token) => {
     fetch("https://www.strava.com/api/v3/athlete", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -26,6 +55,7 @@ function App() {
           payload: data,
         }),
       );
+
     fetch("https://www.strava.com/api/v3/athlete/activities", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -38,7 +68,7 @@ function App() {
           payload: data,
         }),
       );
-  }, []);
+  };
 
   return (
     <div>
